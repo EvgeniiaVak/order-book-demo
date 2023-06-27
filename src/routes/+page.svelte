@@ -15,7 +15,7 @@
 		asks = generatedAsks;
 		price = bids[0].price;
 		maxPossibleCumulativeQuantity =
-			Math.max(bids[bids.length - 1].cumulativeQuantity, asks[0].cumulativeQuantity) * 2;
+			Math.max(bids[bids.length - 1].cumulativeQuantity, asks[0].cumulativeQuantity) * 1.5;
 	};
 
 	onMount(() => {
@@ -28,57 +28,57 @@
 	});
 </script>
 
-<h2>Asks</h2>
-<table class="order-table">
-	{#each asks as ask (ask.price)}
-		<tr
-			class="ask-row"
-			style="--quantity: {(ask.cumulativeQuantity / maxPossibleCumulativeQuantity) * 100}%"
-		>
-			<td>{ask.price.toFixed(2)}</td>
-			<td>{ask.quantity.toFixed(2)}</td>
-			<td>{ask.cumulativeQuantity.toFixed(2)}</td>
-		</tr>
-	{/each}
-</table>
+<div class="flex justify-center p-5">
+	<div class="card w-96 bg-neutral">
+		<div class="card-body items-center text-center">
+			<table class="table table-xs">
+				{#each asks as ask (ask.price)}
+					<tr
+						class="ask-row"
+						style="--quantity: {(ask.cumulativeQuantity / maxPossibleCumulativeQuantity) * 100}%"
+					>
+						<td>{ask.price.toFixed(2)}</td>
+						<td>{ask.quantity.toFixed(2)}</td>
+						<td>{ask.cumulativeQuantity.toFixed(2)}</td>
+					</tr>
+				{/each}
+			</table>
 
-<h2>{price.toFixed(2)}</h2>
+			<h2>{price.toFixed(2)}</h2>
 
-<h3>Bids</h3>
-<table class="order-table">
-	{#each bids as bid (bid.price)}
-		<tr
-			class="bid-row"
-			style="--quantity: {(bid.cumulativeQuantity / maxPossibleCumulativeQuantity) * 100}%"
-		>
-			<td>{bid.price.toFixed(2)}</td>
-			<td>{bid.quantity.toFixed(2)}</td>
-			<td>{bid.cumulativeQuantity.toFixed(2)}</td>
-		</tr>
-	{/each}
-</table>
+			<table class="table table-xs">
+				{#each bids as bid (bid.price)}
+					<tr
+						class="bid-row"
+						style="--quantity: {(bid.cumulativeQuantity / maxPossibleCumulativeQuantity) * 100}%"
+					>
+						<td>{bid.price.toFixed(2)}</td>
+						<td>{bid.quantity.toFixed(2)}</td>
+						<td>{bid.cumulativeQuantity.toFixed(2)}</td>
+					</tr>
+				{/each}
+			</table>
+		</div>
+	</div>
+</div>
 
 <style>
-	.order-table {
-		width: 100%;
-	}
-
 	.ask-row {
 		background: linear-gradient(
 			to left,
-			#ff0000 0%,
-			#ff0000 var(--quantity),
-			#fff var(--quantity),
-			#fff 100%
+			#6e001de0 0%,
+			#6e001de0 var(--quantity),
+			hsl(var(--n) / var(--tw-bg-opacity)) var(--quantity),
+			hsl(var(--n) / var(--tw-bg-opacity)) 100%
 		);
 	}
 	.bid-row {
 		background: linear-gradient(
 			to left,
-			#008000 0%,
-			#008000 var(--quantity),
-			#fff var(--quantity),
-			#fff 100%
+			#005d22e0 0%,
+			#005d22e0 var(--quantity),
+			hsl(var(--n) / var(--tw-bg-opacity)) var(--quantity),
+			hsl(var(--n) / var(--tw-bg-opacity)) 100%
 		);
 	}
 </style>
