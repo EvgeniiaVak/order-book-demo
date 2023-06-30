@@ -2,6 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { generateOrderBook } from '$lib/mockOrderbookData';
 	import type { OrderbookRow } from '$lib/mockOrderbookData';
+	import { COLORS } from '$lib/constants';
 
 	let bids: OrderbookRow[] = [];
 	let asks: OrderbookRow[] = [];
@@ -28,37 +29,38 @@
 	});
 </script>
 
-<div class="flex justify-center p-5">
-	<div class="card w-96 bg-neutral">
-		<div class="card-body items-center text-center">
-			<table class="table table-xs">
-				{#each asks as ask (ask.price)}
-					<tr
-						class="ask-row"
-						style="--quantity: {(ask.cumulativeQuantity / maxPossibleCumulativeQuantity) * 100}%"
-					>
-						<td>{ask.price.toFixed(2)}</td>
-						<td>{ask.quantity.toFixed(2)}</td>
-						<td>{ask.cumulativeQuantity.toFixed(2)}</td>
-					</tr>
-				{/each}
-			</table>
+<div class="card w-96 bg-neutral mx-auto">
+	<div class="card-body items-center text-center">
+		<table class="table table-xs">
+			{#each asks as ask (ask.price)}
+				<!-- TODO: this style variables passage in a string is ugly, look for an alternative-->
+				<tr
+					class="ask-row"
+					style="--quantity: {(ask.cumulativeQuantity / maxPossibleCumulativeQuantity) *
+						100}%; --color: {COLORS.red}"
+				>
+					<td>{ask.price.toFixed(2)}</td>
+					<td>{ask.quantity.toFixed(2)}</td>
+					<td>{ask.cumulativeQuantity.toFixed(2)}</td>
+				</tr>
+			{/each}
+		</table>
 
-			<h2>{price.toFixed(2)}</h2>
+		<h2>{price.toFixed(2)}</h2>
 
-			<table class="table table-xs">
-				{#each bids as bid (bid.price)}
-					<tr
-						class="bid-row"
-						style="--quantity: {(bid.cumulativeQuantity / maxPossibleCumulativeQuantity) * 100}%"
-					>
-						<td>{bid.price.toFixed(2)}</td>
-						<td>{bid.quantity.toFixed(2)}</td>
-						<td>{bid.cumulativeQuantity.toFixed(2)}</td>
-					</tr>
-				{/each}
-			</table>
-		</div>
+		<table class="table table-xs">
+			{#each bids as bid (bid.price)}
+				<tr
+					class="bid-row"
+					style="--quantity: {(bid.cumulativeQuantity / maxPossibleCumulativeQuantity) *
+						100}%; --color: {COLORS.green}"
+				>
+					<td>{bid.price.toFixed(2)}</td>
+					<td>{bid.quantity.toFixed(2)}</td>
+					<td>{bid.cumulativeQuantity.toFixed(2)}</td>
+				</tr>
+			{/each}
+		</table>
 	</div>
 </div>
 
@@ -66,8 +68,8 @@
 	.ask-row {
 		background: linear-gradient(
 			to left,
-			#6e001de0 0%,
-			#6e001de0 var(--quantity),
+			var(--color) 0%,
+			var(--color) var(--quantity),
 			hsl(var(--n) / var(--tw-bg-opacity)) var(--quantity),
 			hsl(var(--n) / var(--tw-bg-opacity)) 100%
 		);
@@ -75,8 +77,8 @@
 	.bid-row {
 		background: linear-gradient(
 			to left,
-			#005d22e0 0%,
-			#005d22e0 var(--quantity),
+			var(--color) 0%,
+			var(--color) var(--quantity),
 			hsl(var(--n) / var(--tw-bg-opacity)) var(--quantity),
 			hsl(var(--n) / var(--tw-bg-opacity)) 100%
 		);
