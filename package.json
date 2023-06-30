@@ -36,5 +36,9 @@
 		"vite": "^4.3.6",
 		"vitest": "^0.25.3"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"lightweight-charts": "^4.0.1",
+		"svelte-lightweight-charts": "^2.2.0"
+	}
 }
