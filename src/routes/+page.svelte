@@ -21,7 +21,7 @@
 
 	onMount(() => {
 		updateOrderBook();
-		intervalId = setInterval(updateOrderBook, 2000); // Update every second
+		intervalId = setInterval(updateOrderBook, 1000); // Update every second
 	});
 
 	onDestroy(() => {
