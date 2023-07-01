@@ -370,9 +370,9 @@
 		data={volume}
 		ref={(api) => (volumeSeries = api)}
 		priceFormat={{ type: 'volume' }}
-		priceScaleId="left"
+		priceScaleId="volume"
 	/>
 
 	<PriceScale id="right" scaleMargins={{ top: 0, bottom: 0.25 }} />
-	<PriceScale id="left" scaleMargins={{ top: 0.8, bottom: 0 }} />
+	<PriceScale id="volume" scaleMargins={{ top: 0.8, bottom: 0 }} />
 </Chart>
