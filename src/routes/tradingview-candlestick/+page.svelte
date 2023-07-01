@@ -1,8 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
 	import { CrosshairMode } from 'lightweight-charts';
-	import { Chart, CandlestickSeries } from 'svelte-lightweight-charts';
-	import { ColorType } from 'lightweight-charts';
+	import { Chart, CandlestickSeries, PriceLine } from 'svelte-lightweight-charts';
+	import { ColorType, LineStyle } from 'lightweight-charts';
 
 	let series;
 
@@ -326,9 +326,17 @@
 
 	let selected = AVAILABLE_THEMES[0];
 	$: theme = THEMES[selected];
+
+	let orderPrice = data.map((candle) => candle.close).reduce((a, b) => a + b, 0) / data.length;
+	let orderPriceVisible = true;
 </script>
 
-<h1>Realtime Emulation</h1>
+<div class="flex justify-end">
+	<button class="btn my-3" on:click={() => (orderPriceVisible = !orderPriceVisible)}
+		>Toggle order price</button
+	>
+</div>
+
 <Chart
 	width={600}
 	height={300}
@@ -336,5 +344,16 @@
 	autoSize={true}
 	{...theme.chart}
 >
-	<CandlestickSeries {data} reactive={true} ref={(api) => (series = api)} {...theme.series} />
+	<CandlestickSeries {data} reactive={true} ref={(api) => (series = api)} {...theme.series}>
+		{#if orderPriceVisible}
+			<PriceLine
+				title="order #1"
+				price={orderPrice}
+				color="#be1238"
+				lineWidth="{2},"
+				lineStyle={LineStyle.Solid}
+				axisLabelVisible={true}
+			/>
+		{/if}
+	</CandlestickSeries>
 </Chart>
