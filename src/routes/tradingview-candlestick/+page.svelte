@@ -1,10 +1,26 @@
 <script>
 	import { onMount } from 'svelte';
 	import { CrosshairMode } from 'lightweight-charts';
-	import { Chart, CandlestickSeries, PriceLine } from 'svelte-lightweight-charts';
+	import {
+		Chart,
+		CandlestickSeries,
+		PriceLine,
+		HistogramSeries,
+		PriceScale,
+		TimeScale
+	} from 'svelte-lightweight-charts';
 	import { ColorType, LineStyle } from 'lightweight-charts';
 
 	let series;
+	let volumeSeries;
+
+	function candleToVolume(candle) {
+		return {
+			time: candle.time,
+			value: candle.close * 10000000 * (Math.random() + 1),
+			color: candle.open > candle.close ? 'rgba(255,82,82, 0.8)' : 'rgba(0, 150, 136, 0.8)'
+		};
+	}
 
 	onMount(() => {
 		let lastClose = data[data.length - 1].close;
@@ -73,7 +89,9 @@
 				currentBar.high = Math.max(currentBar.high, price);
 				currentBar.low = Math.min(currentBar.low, price);
 			}
+			// TODO: find out how to update
 			series.update(currentBar);
+			volumeSeries.update(candleToVolume(currentBar));
 		}
 
 		function reset() {
@@ -260,6 +278,8 @@
 		{ time: '2019-05-28', open: 59.21, high: 59.66, low: 59.02, close: 59.57 }
 	];
 
+	const volume = data.map(candleToVolume);
+
 	const THEMES = {
 		Dark: {
 			chart: {
@@ -285,11 +305,6 @@
 						color: '#363C4E'
 					}
 				}
-			},
-			series: {
-				topColor: 'rgba(32, 226, 47, 0.56)',
-				bottomColor: 'rgba(32, 226, 47, 0.04)',
-				lineColor: 'rgba(32, 226, 47, 1)'
 			}
 		},
 		Light: {
@@ -313,11 +328,6 @@
 						color: '#f0f3fa'
 					}
 				}
-			},
-			series: {
-				topColor: 'rgba(33, 150, 243, 0.56)',
-				bottomColor: 'rgba(33, 150, 243, 0.04)',
-				lineColor: 'rgba(33, 150, 243, 1)'
 			}
 		}
 	};
@@ -339,8 +349,8 @@
 
 <Chart
 	width={600}
-	height={300}
-	crosshair={{ mode: CrosshairMode.Normal }}
+	height={450}
+	crosshair={{ mode: CrosshairMode.Magnet }}
 	autoSize={true}
 	{...theme.chart}
 >
@@ -356,4 +366,13 @@
 			/>
 		{/if}
 	</CandlestickSeries>
+	<HistogramSeries
+		data={volume}
+		ref={(api) => (volumeSeries = api)}
+		priceFormat={{ type: 'volume' }}
+		priceScaleId="left"
+	/>
+
+	<PriceScale id="right" scaleMargins={{ top: 0, bottom: 0.25 }} />
+	<PriceScale id="left" scaleMargins={{ top: 0.8, bottom: 0 }} />
 </Chart>
