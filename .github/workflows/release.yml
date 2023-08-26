@@ -1,0 +1,47 @@
+name: Release
+
+# manual release
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      # Extract version from package.json
+      - id: pkg
+        run: echo "::set-output name=version::$(node -p "require('./package.json').version")"
+
+      # Check if tag already exists
+      - name: Check if tag exists
+        run: |
+          if git rev-parse "v${{ steps.pkg.outputs.version }}" >/dev/null 2>&1; then
+            echo "Tag v${{ steps.pkg.outputs.version }} already exists!"
+            exit 1
+          fi
+
+      - name: Build Project
+        run: npm run build
+
+      # Create a GitHub release
+      - name: Create Release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: 'build/*'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{ steps.pkg.outputs.version }}
+          name: Release v${{ steps.pkg.outputs.version }}
+          draft: false
+          prerelease: false
